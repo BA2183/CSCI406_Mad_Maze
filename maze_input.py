@@ -1,36 +1,4 @@
 import networkx as net
-import matplotlib.pyplot as plt
-import string
-
-def drawRefurbishedGraph(graph, pos):
-    # size of plot
-    plt.figure(figsize=(10,10),dpi=100)
-    # set up position of graph items
-        
-    # draw nodes
-    for node in graph.nodes():
-        net.draw_networkx_nodes(graph, pos,
-                               nodelist=list(graph.nodes()),
-                               node_size=250, node_color='red', alpha=0.9)
-        # print("drawn node:", node)
-    # draw edges
-    for edge in graph.edges:
-        net.draw_networkx_edges(graph, pos,
-                               edgelist=list(graph.edges()),
-                               width=3, alpha=0.9, edge_color='grey')
-        # print("drawn edge:", edge)
-    # draw network labels
-    labels={}
-    for node in graph.nodes():
-        # label according to PDF problem statement node labeling standard
-        if str(node) != 'win':
-            labels[node]=str(node[0]+1)+", "+str(node[1]+1)
-        else:
-            labels['win'] = 'win'
-    net.draw_networkx_labels(graph, pos, labels, font_size=5)
-    
-    plt.axis('off')
-    plt.show()
 
 def input_maze():
     # read in number of nodes and edges
@@ -101,8 +69,14 @@ def input_maze():
                 else:
                     state_graph.add_node((rocket, lucky))
     
-    all_paths = []
-    for path in net.all_shortest_paths(state_graph, starting_state, win_state):
+    all_paths_str = []
+    try:
+        all_paths = net.all_shortest_paths(state_graph, starting_state, win_state)
+    except net.NetworkXNoPath:
+        print("NO PATH")
+        return
+    
+    for path in all_paths:
         out_str = ""
         for step in range(len(path)):
             if step < len(path) - 2:
@@ -113,9 +87,9 @@ def input_maze():
                 # lucky moved
                 if path[step][1] != path[step+1][1]:
                     out_str = out_str + "L" + str(path[step+1][1] + 1)
-        all_paths.append(out_str)
+        all_paths_str.append(out_str)
 
-    print(all_paths)
+    print(min(all_paths_str))
 
     # for node, neighbors in state_graph.adjacency():
     #     print("node:", node, "neighbors:", neighbors)
