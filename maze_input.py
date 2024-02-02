@@ -1,36 +1,4 @@
 import networkx as net
-# import matplotlib.pyplot as plt
-# import string
-
-# def drawRefurbishedGraph(graph, pos):
-#     # size of plot
-#     plt.figure(figsize=(10,10),dpi=100)
-#     # set up position of graph items
-        
-#     # draw nodes
-#     for node in graph.nodes():
-#         net.draw_networkx_nodes(graph, pos,
-#                                nodelist=list(graph.nodes()),
-#                                node_size=250, node_color='red', alpha=0.9)
-#         # print("drawn node:", node)
-#     # draw edges
-#     for edge in graph.edges:
-#         net.draw_networkx_edges(graph, pos,
-#                                edgelist=list(graph.edges()),
-#                                width=3, alpha=0.9, edge_color='grey')
-#         # print("drawn edge:", edge)
-#     # draw network labels
-#     labels={}
-#     for node in graph.nodes():
-#         # label according to PDF problem statement node labeling standard
-#         if str(node) != 'win':
-#             labels[node]=str(node[0]+1)+", "+str(node[1]+1)
-#         else:
-#             labels['win'] = 'win'
-#     net.draw_networkx_labels(graph, pos, labels, font_size=5)
-    
-#     plt.axis('off')
-#     plt.show()
 
 def input_maze():
     # read in number of nodes and edges
@@ -53,26 +21,28 @@ def input_maze():
     # add nodes
     for node_num in range(len(color_map)):
         in_maze.add_node(node_num, color=color_map[node_num])
-        # print("add node:", node_num)
     in_maze.add_node(len(color_map), color='W')
 
     # read edges
     for i in range(n_edges):
         input_edge = input()
+        # make sure for empty input
         if input_edge:
             from_node, to_node, edge_color = input_edge.split()
             in_maze.add_edge(int(from_node) - 1, int(to_node) - 1, color=edge_color)
-            # print("add edge:", (from_node, to_node))
 
     # make state map
     state_graph = net.DiGraph()
+
     # win state
     win_state = 'win'
     state_graph.add_node(win_state)
+
     # add all states
     for lucky in range(len(color_map) + 1):
         for rocket in range(len(color_map) + 1):
             state_graph.add_node((rocket, lucky))
+
             # if state connect to winning
             if lucky == len(color_map) or rocket == len(color_map):
                 state_graph.add_edge((rocket, lucky), win_state)
@@ -107,9 +77,5 @@ def input_maze():
     except net.NetworkXNoPath:
         print("NO PATH")
         return
-
-    # for node, neighbors in state_graph.adjacency():
-    #     print("node:", node, "neighbors:", neighbors)
-    # drawRefurbishedGraph(state_graph, net.fruchterman_reingold_layout(state_graph))
     
 input_maze()
