@@ -100,7 +100,22 @@ def input_maze():
                     state_graph.add_edge((rocket, lucky), win_state)
                 else:
                     state_graph.add_node((rocket, lucky))
+    
+    all_paths = []
+    for path in net.all_shortest_paths(state_graph, starting_state, win_state):
+        out_str = ""
+        for step in range(len(path)):
+            if step != len(path) - 2:
+                # rocket moved
+                if path[step][0] != path[step+1][0]:
+                    out_str = out_str + "R" + str(path[step+1][0] + 1)
+                
+                # lucky moved
+                if path[step][1] != path[step+1][1]:
+                    out_str = out_str + "L" + str(path[step+1][1] + 1)
 
+    # for node, neighbors in state_graph.adjacency():
+    #     print("node:", node, "neighbors:", neighbors)
     # drawRefurbishedGraph(state_graph, net.fruchterman_reingold_layout(state_graph))
     
 input_maze()
