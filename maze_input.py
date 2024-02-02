@@ -89,24 +89,24 @@ def input_maze():
     all_paths_str = []
     try:
         all_paths = net.all_shortest_paths(state_graph, starting_state, win_state)
+
+        for path in all_paths:
+            out_str = ""
+            for step in range(len(path)):
+                if step < len(path) - 2:
+                    # rocket moved
+                    if path[step][0] != path[step+1][0]:
+                        out_str = out_str + "R" + str(path[step+1][0] + 1)
+                    
+                    # lucky moved
+                    if path[step][1] != path[step+1][1]:
+                        out_str = out_str + "L" + str(path[step+1][1] + 1)
+            all_paths_str.append(out_str)
+
+        print(min(all_paths_str))
     except net.NetworkXNoPath:
         print("NO PATH")
         return
-    
-    for path in all_paths:
-        out_str = ""
-        for step in range(len(path)):
-            if step < len(path) - 2:
-                # rocket moved
-                if path[step][0] != path[step+1][0]:
-                    out_str = out_str + "R" + str(path[step+1][0] + 1)
-                
-                # lucky moved
-                if path[step][1] != path[step+1][1]:
-                    out_str = out_str + "L" + str(path[step+1][1] + 1)
-        all_paths_str.append(out_str)
-
-    print(min(all_paths_str))
 
     # for node, neighbors in state_graph.adjacency():
     #     print("node:", node, "neighbors:", neighbors)
