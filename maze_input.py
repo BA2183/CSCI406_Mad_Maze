@@ -16,12 +16,12 @@ def input_maze():
     starting_state = (rocket_start, lucky_start)
 
     # make maze
-    in_maze = net.DiGraph()
+    in_maze = net.MultiDiGraph()
 
     # add nodes
     for node_num in range(len(color_map)):
         in_maze.add_node(node_num, color=color_map[node_num])
-    in_maze.add_node(len(color_map), color='W')
+    in_maze.add_node(len(color_map), color="W")
 
     # read edges
     for i in range(n_edges):
@@ -48,10 +48,10 @@ def input_maze():
                 state_graph.add_edge((rocket, lucky), win_state)
     
     # add edges between states
-    for edge in in_maze.edges():
+    for edge in in_maze.edges(keys=True):
         for node in in_maze.nodes():
             # color match
-            if in_maze.edges()[edge]['color'] == in_maze.nodes()[node]['color']: 
+            if in_maze.edges(keys=True)[(edge)]['color'] == in_maze.nodes()[node]['color']: 
                     # add edges between either lucky colored room and rocket movement and vice versa
                     state_graph.add_edge((edge[0], node), (edge[1], node))
                     state_graph.add_edge((node, edge[0]), (node, edge[1]))
