@@ -12,13 +12,13 @@ def drawRefurbishedGraph(graph, pos):
         net.draw_networkx_nodes(graph, pos,
                                nodelist=list(graph.nodes()),
                                node_size=250, node_color='red', alpha=0.9)
-        print("drawn node:", node)
+        # print("drawn node:", node)
     # draw edges
     for edge in graph.edges:
         net.draw_networkx_edges(graph, pos,
                                edgelist=list(graph.edges()),
                                width=3, alpha=0.9, edge_color='grey')
-        print("drawn edge:", edge)
+        # print("drawn edge:", edge)
     # draw network labels
     labels={}
     for node in graph.nodes():
@@ -70,18 +70,28 @@ def input_maze():
     # keep track if a state already found
     state_matrix = [[-1 for j in range(len(color_map) + 1)] for i in range(len(color_map) + 1)]
 
+    # check the edge
     for edge in in_maze.edges():
+        # check possible rocket location
         for rocket in range(len(color_map)+1):
+            # check possible lucky location
             for lucky in range(len(color_map)+1):
+                # if rocket location is at a from node of an edge and color of the edge match lucky, rocket move
                 if rocket == edge[0] and in_maze.edges()[edge]['color'] == in_maze.nodes()[lucky]['color']:
+                    # add the current state
                     state_graph.add_node((rocket, lucky))
+                    # add the next state
                     state_graph.add_node((edge[1], lucky))
+                    # connect the state
                     state_graph.add_edge((rocket, lucky), (edge[1], lucky))
                 elif rocket == len(color_map):
+                    # if rocket location is at the final node, connect to win state
                     state_graph.add_edge((rocket, lucky), win_state)
                 else:
+                    # no connection, add the current state
                     state_graph.add_node((rocket, lucky))
                 
+                # same thing, but it is for lucky
                 if lucky == edge[0] and in_maze.edges()[edge]['color'] == in_maze.nodes()[rocket]['color']:
                     state_graph.add_node((rocket, lucky))
                     state_graph.add_node((rocket, edge[1]))
