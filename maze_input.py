@@ -105,7 +105,7 @@ def input_maze():
     for path in net.all_shortest_paths(state_graph, starting_state, win_state):
         out_str = ""
         for step in range(len(path)):
-            if step != len(path) - 2:
+            if step < len(path) - 2:
                 # rocket moved
                 if path[step][0] != path[step+1][0]:
                     out_str = out_str + "R" + str(path[step+1][0] + 1)
@@ -113,6 +113,9 @@ def input_maze():
                 # lucky moved
                 if path[step][1] != path[step+1][1]:
                     out_str = out_str + "L" + str(path[step+1][1] + 1)
+        all_paths.append(out_str)
+
+    print(all_paths)
 
     # for node, neighbors in state_graph.adjacency():
     #     print("node:", node, "neighbors:", neighbors)
